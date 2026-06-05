@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
 
+// ============================================================
+// 第1组 创新实验 Flutter 小组项目
+// 修改者：刘丽（学号20231060173，后四位0173）
+//
+// 【修改说明】
+// 1. 在原始 Mane 清新绿色风格基础上优化
+// 2. 保留原有 AppBar、FAB 打卡按钮的整体布局
+// 3. 5位成员平等展示，每人一张名片卡片，无主次之分
+// 4. 配色保持清新绿色系（emerald），成员各有浅色区分
+// ============================================================
+
 void main() {
-  runApp(const InnovationHelloApp());
+  runApp(const FreshHelloApp());
 }
 
-class InnovationHelloApp extends StatelessWidget {
-  const InnovationHelloApp({super.key});
+class FreshHelloApp extends StatelessWidget {
+  const FreshHelloApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: '创新实验 Flutter 首页',
       debugShowCheckedModeBanner: false,
-      title: '第1组 创新实验 Flutter 首页',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0F766E),
-          secondary: const Color(0xFFF59E0B),
+          seedColor: const Color(0xFF10B981),
+          brightness: Brightness.light,
         ),
         useMaterial3: true,
       ),
@@ -32,243 +43,321 @@ class HelloHomePage extends StatefulWidget {
 }
 
 class _HelloHomePageState extends State<HelloHomePage> {
-  int completedTasks = 0;
+  int _checkCount = 0;
 
-  String get progressText {
-    if (completedTasks == 0) {
-      return '准备开始第14周 Flutter 打卡';
-    }
-    if (completedTasks < 3) {
-      return '继续加油，课堂任务正在推进';
-    }
-    return '今日目标已达成，可以截图提交';
-  }
-
-  void finishOneTask() {
+  void _incrementCheck() {
     setState(() {
-      completedTasks += 1;
+      _checkCount++;
     });
   }
 
-  void resetTasks() {
+  void _resetCheck() {
     setState(() {
-      completedTasks = 0;
+      _checkCount = 0;
     });
+  }
+
+  String get _checkMessage {
+    if (_checkCount == 0) return '点击右下角按钮开始打卡 🌿';
+    if (_checkCount < 5) return '已完成 $_checkCount 次打卡，继续加油！💪';
+    if (_checkCount < 10) return '太棒了！已打卡 $_checkCount 次 🔥';
+    return '打卡达人！已累计 $_checkCount 次 ✨';
   }
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
+      backgroundColor: const Color(0xFFF5FBF8),
       appBar: AppBar(
-        title: const Text('第1组 创新实验 Flutter 首页'),
-        backgroundColor: colorScheme.primaryContainer,
-        foregroundColor: colorScheme.onPrimaryContainer,
+        title: const Text('创新实验 Flutter 首页'),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF10B981),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(16),
+          ),
+        ),
       ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 520),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ===== 标题区 =====
+            const SizedBox(height: 10),
+            const Text(
+              '🌿 Hello Flutter',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1A1A2E),
+              ),
+            ),
+            const SizedBox(height: 6),
+            const Text(
+              '我们已完成第14周 Flutter 入门任务',
+              style: TextStyle(
+                fontSize: 16,
+                color: Color(0xFF666666),
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // ===== 小组信息卡片 =====
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF10B981), Color(0xFF34D399)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF10B981).withValues(alpha: 0.3),
+                    blurRadius: 16,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.rocket_launch,
-                    size: 76,
-                    color: colorScheme.primary,
+                  _infoRow(Icons.group, '小组', '第1组'),
+                  const SizedBox(height: 10),
+                  _infoRow(Icons.people, '成员',
+                      '吴宣萱、刘丽、李娅、马蝶、雷雅倩'),
+                  const SizedBox(height: 10),
+                  _infoRow(Icons.check_circle_outline, '打卡次数', '$_checkCount 次'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // ===== 成员卡片列表 =====
+            const Text(
+              '👥 小组成员',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1A1A2E),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _memberTile(
+              name: '吴宣萱',
+              id: '****0024',
+              role: '组长',
+              color: const Color(0xFF10B981),
+              icon: Icons.star,
+            ),
+            const SizedBox(height: 8),
+            _memberTile(
+              name: '刘丽',
+              id: '****0173',
+              role: '成员',
+              color: const Color(0xFF06B6D4),
+              icon: Icons.person,
+            ),
+            const SizedBox(height: 8),
+            _memberTile(
+              name: '李娅',
+              id: '****????',
+              role: '成员',
+              color: const Color(0xFF8B5CF6),
+              icon: Icons.person,
+            ),
+            const SizedBox(height: 8),
+            _memberTile(
+              name: '马蝶',
+              id: '****????',
+              role: '成员',
+              color: const Color(0xFFF59E0B),
+              icon: Icons.person,
+            ),
+            const SizedBox(height: 8),
+            _memberTile(
+              name: '雷雅倩',
+              id: '****????',
+              role: '成员',
+              color: const Color(0xFFEC4899),
+              icon: Icons.person,
+            ),
+            const SizedBox(height: 32),
+
+            // ===== 打卡状态区 =====
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: const Color(0xFF10B981).withValues(alpha: 0.2),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
                   ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Hello Flutter，我们已经跑通第14周入门任务！',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
-                  ),
-                  const SizedBox(height: 12),
+                ],
+              ),
+              child: Column(
+                children: [
+                  const Icon(Icons.emoji_events,
+                      color: Color(0xFF10B981), size: 36),
+                  const SizedBox(height: 8),
                   Text(
-                    '第1组成员个性化展示 — 每人都有专属配色',
+                    _checkMessage,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  const SizedBox(height: 24),
-                  // ========== 小组成员信息卡片 ==========
-                  Card(
-                    elevation: 0,
-                    color: colorScheme.secondaryContainer,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Color(0xFF444444),
                     ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(18),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '👥 第1组成员（共5人）',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 14),
-                          // 成员1: 吴宣萱（组长）— 深青色
-                          _MemberCard(
-                            icon: Icons.star,
-                            name: '吴宣萱（组长）',
-                            studentId: '0024',
-                            color: Color(0xFF0F766E),
-                          ),
-                          SizedBox(height: 10),
-                          // 成员2: Mane — 玫红
-                          _MemberCard(
-                            icon: Icons.person,
-                            name: 'Mane',
-                            studentId: '0157',
-                            color: Color(0xFFE11D48),
-                          ),
-                          SizedBox(height: 10),
-                          // 成员3: 刘丽 — 紫色（个性化配色）
-                          _MemberCard(
-                            icon: Icons.star,
-                            name: '刘丽',
-                            studentId: '0173',
-                            color: Color(0xFF7C3AED),
-                          ),
-                          SizedBox(height: 10),
-                          // 成员4: 待补充
-                          _MemberCard(
-                            icon: Icons.person_outline,
-                            name: '成员4（待补充）',
-                            studentId: '????',
-                            color: Color(0xFFF59E0B),
-                          ),
-                          SizedBox(height: 10),
-                          // 成员5: 待补充
-                          _MemberCard(
-                            icon: Icons.person_outline,
-                            name: '成员5（待补充）',
-                            studentId: '????',
-                            color: Color(0xFF3B82F6),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  // ========== 任务打卡卡片 ==========
-                  Card(
-                    elevation: 0,
-                    color: colorScheme.surfaceContainerHighest,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        children: [
-                          const Text('已完成任务次数'),
-                          const SizedBox(height: 8),
-                          Text(
-                            '$completedTasks',
-                            style: Theme.of(context).textTheme.displayMedium
-                                ?.copyWith(
-                                  color: colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            progressText,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 22),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: [
-                      FilledButton.icon(
-                        onPressed: finishOneTask,
-                        icon: const Icon(Icons.check_circle),
-                        label: const Text('完成一次打卡'),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: resetTasks,
-                        icon: const Icon(Icons.refresh),
-                        label: const Text('重新开始'),
-                      ),
-                    ],
                   ),
                 ],
               ),
             ),
-          ),
+            const SizedBox(height: 80),
+          ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: finishOneTask,
-        icon: const Icon(Icons.add_task),
-        label: const Text('任务 +1'),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton.small(
+            heroTag: 'reset',
+            onPressed: _resetCheck,
+            backgroundColor: Colors.white,
+            foregroundColor: const Color(0xFF10B981),
+            elevation: 2,
+            child: const Icon(Icons.refresh),
+          ),
+          const SizedBox(height: 10),
+          FloatingActionButton(
+            heroTag: 'check',
+            onPressed: _incrementCheck,
+            backgroundColor: const Color(0xFF10B981),
+            child: const Icon(Icons.check, size: 28),
+          ),
+        ],
       ),
     );
   }
-}
 
-/// 成员信息卡片组件 — 每人一行，带专属配色
-class _MemberCard extends StatelessWidget {
-  const _MemberCard({
-    required this.icon,
-    required this.name,
-    required this.studentId,
-    required this.color,
-  });
-
-  final IconData icon;
-  final String name;
-  final String studentId;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      decoration: BoxDecoration(
-        border: Border(left: BorderSide(color: color, width: 4)),
-        borderRadius: BorderRadius.circular(6),
-        color: color.withOpacity(0.08),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 22, color: color),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15,
-                    color: color,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '学号后四位：$studentId',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[700],
-                  ),
-                ),
-              ],
+  Widget _infoRow(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Icon(icon, color: const Color(0xFFE8FFF5), size: 20),
+        const SizedBox(width: 10),
+        Text(
+          '$label：',
+          style: const TextStyle(
+            fontSize: 14,
+            color: Color(0xFFD1FAE5),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
             ),
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _memberTile({
+    required String name,
+    required String id,
+    required String role,
+    required Color color,
+    required IconData icon,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
         ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: color, size: 22),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        name,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1A1A2E),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          role,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: color,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    id,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF999999),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right,
+                color: Color(0xFFCCCCCC), size: 20),
+          ],
+        ),
       ),
     );
   }

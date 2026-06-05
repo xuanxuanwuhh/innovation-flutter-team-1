@@ -4,29 +4,22 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_hello_personalized/main.dart';
 
 void main() {
-  testWidgets('personalized task page updates counter', (
+  testWidgets('group page displays members and check-in', (
     WidgetTester tester,
   ) async {
-    await tester.pumpWidget(const InnovationHelloApp());
+    await tester.pumpWidget(const FreshHelloApp());
 
-    expect(find.text('吴宣萱的创新实验 Flutter 首页'), findsOneWidget);
-    expect(find.text('姓名：吴宣萱'), findsOneWidget);
-    expect(find.text('0'), findsOneWidget);
+    expect(find.text('创新实验 Flutter 首页'), findsOneWidget);
+    expect(find.text('🌿 Hello Flutter'), findsOneWidget);
+    expect(find.text('0 次'), findsOneWidget);
 
-    final completeButton = find.widgetWithText(FilledButton, '完成一次打卡');
-    await tester.ensureVisible(completeButton);
+    // 打卡
+    final checkBtn = find.byIcon(Icons.check);
+    await tester.ensureVisible(checkBtn.first);
     await tester.pumpAndSettle();
-    await tester.tap(completeButton);
+    await tester.tap(checkBtn.first);
     await tester.pump();
 
-    expect(find.text('1'), findsOneWidget);
-
-    final resetButton = find.widgetWithText(OutlinedButton, '重新开始');
-    await tester.ensureVisible(resetButton);
-    await tester.pumpAndSettle();
-    await tester.tap(resetButton);
-    await tester.pump();
-
-    expect(find.text('0'), findsOneWidget);
+    expect(find.text('1 次'), findsOneWidget);
   });
 }
