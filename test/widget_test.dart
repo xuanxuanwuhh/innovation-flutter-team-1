@@ -4,11 +4,24 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_hello_personalized/main.dart';
 
 void main() {
+  testWidgets('group page displays members and check-in', (
   testWidgets('fresh hello page shows team members and updates counter', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const FreshHelloApp());
 
+    expect(find.text('创新实验 Flutter 首页'), findsOneWidget);
+    expect(find.text('🌿 Hello Flutter'), findsOneWidget);
+    expect(find.text('0 次'), findsOneWidget);
+
+    // 打卡
+    final checkBtn = find.byIcon(Icons.check);
+    await tester.ensureVisible(checkBtn.first);
+    await tester.pumpAndSettle();
+    await tester.tap(checkBtn.first);
+    await tester.pump();
+
+    expect(find.text('1 次'), findsOneWidget);
     expect(find.text('Mane的创新实验 Flutter 首页'), findsOneWidget);
     expect(find.text('成员：吴宣萱、刘丽、李娅、马蝶、雷雅倩'), findsOneWidget);
     expect(find.textContaining('今日已完成任务：0 次'), findsOneWidget);
