@@ -114,7 +114,7 @@ class _HelloHomePageState extends State<HelloHomePage> {
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        leading: const Icon(Icons.star),
+        leading: const Icon(Icons.sparkles),
       ),
       body: SafeArea(
         child: Center(
@@ -171,7 +171,7 @@ class _HelloHomePageState extends State<HelloHomePage> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  '我已完成第14周 Flutter 入门任务',
+                  '🌟 我已完成第14周 Flutter 入门任务 🌟',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, color: Color(0xFFFF8FA3)),
                 ),
